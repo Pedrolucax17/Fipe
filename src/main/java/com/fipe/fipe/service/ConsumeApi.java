@@ -8,13 +8,12 @@ import java.net.http.HttpResponse;
 
 public class ConsumeApi {
 
-    public static String getData(String address){
+    public static String consumeApi(String address){
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest
-                .newBuilder()
+        HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(address))
                 .build();
-        HttpResponse<String> response =  null;
+        HttpResponse<String> response = null;
         try{
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
