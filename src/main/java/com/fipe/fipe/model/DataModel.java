@@ -1,4 +1,10 @@
 package com.fipe.fipe.model;
 
-public record DataModel() {
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.List;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DataModel(List<Datas> models) {
 }
