@@ -21,52 +21,66 @@ public class Main {
     private ConsumeApi consumeApi;
 
     public void showMenu(){
-        String menu = """
+        try{
+            String menu = """
                 ***OPÇÕES***
                 Carro
                 Caminhão
                 Moto                               
                 """;
 
-        System.out.println(menu);
+            System.out.println(menu);
 
-        System.out.println("Digite a opção que você deseja");
-        String option = sc.next().toLowerCase();
+            System.out.println("Digite a opção que você deseja");
+            String option = sc.next().toLowerCase();
 
-        String json = ConsumeApi.consumeApi(BASE_URL + option + "/marcas");
-        System.out.println(json);
-        List<Data> datas = convertData.obterLista(json, Data.class);
-        datas.stream()
-                .sorted(Comparator.comparing(Data::code))
-                .forEach(System.out::println);
+            if(option.toLowerCase().contains("car")){
+                option = "carros";
+            }else if(option.toLowerCase().contains("caminh")){
+                option = "caminhoes";
+            }else if(option.toLowerCase().contains("moto")){
+                option = "motos";
+            }else{
+                System.out.println("Opção inválida");
+            }
 
-        System.out.print("Digite o código da marca que você deseja: ");
-        String code = sc.next();
-        json = ConsumeApi.consumeApi(BASE_URL + option + "/marcas/" + code + "/modelos");
-        System.out.println(json);
-        var models = convertData.getDatas(json, DataModel.class);
-        System.out.println(models);
-        models.models().stream()
-                .sorted(Comparator.comparing(Data::code))
-                .forEach(System.out::println);
 
-        System.out.print("Digite o código do modelo desejado: ");
-        String newCode = sc.next();
-        json = ConsumeApi.consumeApi(BASE_URL + option + "/marcas/" + code + "/modelos/" + newCode + "/anos");
-        System.out.println(json);
-        List<Data> modelsData = convertData.obterLista(json, Data.class);
-        System.out.println(modelsData);
-        modelsData.stream().sorted(Comparator.comparing(Data::code)).forEach(System.out::println);
+            String address = BASE_URL + option + "/marcas";
+            String response = ConsumeApi.consumeApi(address);
+            List<Data> datas = convertData.obterLista(response, Data.class);
+            datas.stream()
+                    .sorted(Comparator.comparing(Data::code))
+                    .forEach(System.out::println);
 
-        System.out.print("Digite o código do ano desejado: ");
-        String yearCode = sc.next();
-        json = ConsumeApi.consumeApi(
-                BASE_URL + option + "/marcas/" + code + "/modelos/" + newCode + "/anos/" + yearCode
-                );
-        System.out.println(json);
-        DataVehicles vehicles = convertData.getDatas(json, DataVehicles.class);
-        System.out.println(vehicles);
+            System.out.print("Digite o código da marca que você deseja: ");
+            String code = sc.next();
+            address = address + "/" + code + "/modelos";
+            response =ConsumeApi.consumeApi(address);
+            var models = convertData.getDatas(response, DataModel.class);
+            models.models().stream()
+                    .sorted(Comparator.comparing(Data::code))
+                    .forEach(System.out::println);
 
-        sc.close();
+            System.out.print("Digite o código do modelo desejado: ");
+            String newCode = sc.next();
+            address = address + "/" + newCode + "/anos";
+            response = ConsumeApi.consumeApi(address);
+            List<Data> modelsData = convertData.obterLista(response, Data.class);
+            modelsData.stream().sorted(Comparator.comparing(Data::code)).forEach(System.out::println);
+
+            System.out.print("Digite o código do ano desejado: ");
+            String yearCode = sc.next();
+            address = address + "/" + yearCode;
+            response = ConsumeApi.consumeApi(address);
+            DataVehicles vehicles = convertData.getDatas(response, DataVehicles.class);
+        }
+        catch (RuntimeException e){
+            throw  new RuntimeException(e.getMessage());
+        }
+        finally {
+            sc.close();
+        }
+
+        System.exit(0);
     }
 }

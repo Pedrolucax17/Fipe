@@ -13,7 +13,7 @@ public record DataVehicles(
         String model,
         @JsonAlias("AnoModelo")
         String year,
-        @JsonAlias("Combustível")
+        @JsonAlias("Combustivel")
         String fuelType
 ) {
 }
