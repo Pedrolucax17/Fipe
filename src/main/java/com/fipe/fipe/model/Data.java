@@ -3,11 +3,10 @@ package com.fipe.fipe.model;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public record Datas(
+public record Data(
         @JsonAlias("codigo")
-        Long code,
-        @JsonAlias("name")
+        String code,
+        @JsonAlias("nome")
         String name)
 {
 
