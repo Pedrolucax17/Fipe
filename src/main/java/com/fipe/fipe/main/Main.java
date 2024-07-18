@@ -2,6 +2,7 @@ package com.fipe.fipe.main;
 
 import com.fipe.fipe.model.DataModel;
 import com.fipe.fipe.model.Data;
+import com.fipe.fipe.model.DataVehicles;
 import com.fipe.fipe.service.ConsumeApi;
 import com.fipe.fipe.service.ConvertData;
 
@@ -33,6 +34,7 @@ public class Main {
         String option = sc.next().toLowerCase();
 
         String json = ConsumeApi.consumeApi(BASE_URL + option + "/marcas");
+        System.out.println(json);
         List<Data> datas = convertData.obterLista(json, Data.class);
         datas.stream()
                 .sorted(Comparator.comparing(Data::code))
@@ -47,6 +49,23 @@ public class Main {
         models.models().stream()
                 .sorted(Comparator.comparing(Data::code))
                 .forEach(System.out::println);
+
+        System.out.print("Digite o código do modelo desejado: ");
+        String newCode = sc.next();
+        json = ConsumeApi.consumeApi(BASE_URL + option + "/marcas/" + code + "/modelos/" + newCode + "/anos");
+        System.out.println(json);
+        List<Data> modelsData = convertData.obterLista(json, Data.class);
+        System.out.println(modelsData);
+        modelsData.stream().sorted(Comparator.comparing(Data::code)).forEach(System.out::println);
+
+        System.out.print("Digite o código do ano desejado: ");
+        String yearCode = sc.next();
+        json = ConsumeApi.consumeApi(
+                BASE_URL + option + "/marcas/" + code + "/modelos/" + newCode + "/anos/" + yearCode
+                );
+        System.out.println(json);
+        DataVehicles vehicles = convertData.getDatas(json, DataVehicles.class);
+        System.out.println(vehicles);
 
         sc.close();
     }
